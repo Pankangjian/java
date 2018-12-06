@@ -4,7 +4,7 @@
  * Created by pan on 2018/12/4.
  */
 
-public class test {
+public class SequenceList {
     public static void main(String[] args) {
         test();
     }
