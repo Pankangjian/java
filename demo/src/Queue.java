@@ -6,12 +6,15 @@ import java.lang.reflect.Array;
  */
 public class Queue {
     public static void main(String[] args) {
+        System.out.println("--------Java顺序队列测试----------");
         test();
-
+        System.out.println("--------Java链队列测试----------");
+        test_1();
     }
 
     /**
      * Java顺序队列实现
+     *
      * @param <E>
      */
     public static class SeqQueue<E> {
@@ -127,4 +130,146 @@ public class Queue {
         System.out.println("清空队列后长度=" + newQueue.size());
     }
 
+
+    /**
+     * java链队列实现
+     *
+     * @param <E>
+     */
+    public static class LinkedQueue<E> {
+        // 链队列结点类
+        class QueueNode<E> {
+            private E data;
+            private QueueNode<E> next;
+
+            //构造方法
+            public QueueNode() {
+            }
+
+            public QueueNode(E data) {
+                this.data = data;
+            }
+
+            public QueueNode(E data, QueueNode<E> next) {
+                this.data = data;
+                this.next = next;
+            }
+        }
+
+        private QueueNode<E> front;           // 队列头指示器
+        private QueueNode<E> rear;            // 队列尾指示器
+        private int maxsize;                  // 队列最大存储容量，假如为0时，容量不限
+        private int size;                     // 队列数据元素个数
+
+        // 初始化
+        public LinkedQueue() {
+            front = rear = null;
+            maxsize = 0;
+            size = 0;
+        }
+
+        public LinkedQueue(int maxsize) {
+            super();
+            this.maxsize = maxsize;
+        }
+
+        // 判断队列是否为空
+        public boolean isEmpty() {
+            if (front == rear && size == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // 判断队列是否为满
+        public boolean isFull() {
+            if (maxsize != 0 && size == maxsize) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //入队
+        public boolean enqueue(E value) {
+            QueueNode newNdoe = new QueueNode(value);
+            if (!isFull()) {
+                if (isEmpty()) {         // 队列为空时，直接把插入的新的结点赋给指示器
+                    front = newNdoe;
+                    rear = newNdoe;
+                } else {
+                    rear.next = newNdoe;           // 加入新结点时，旧的队尾next指向新结点
+                    rear = newNdoe;                // 新结点作为新的队尾
+                }
+                size++;
+                return true;
+            }
+            return false;
+        }
+
+        //出队
+        public E dequeue() {
+            if (isEmpty()) return null;
+            QueueNode<E> node = front;
+            front = front.next;
+            if (front == null) {      // 删完最后一位时，队列为空，front为空
+                rear = null;
+            }
+            size--;
+            return node.data;
+
+        }
+
+        //获取队头的元素
+        public E peek_front() {
+            if (!isEmpty()) {
+                return front.data;
+            }
+            return null;
+        }
+
+        //获取队尾的元素
+        public E peek_rear() {
+            if (!isEmpty()) {
+                return rear.data;
+            } else {
+                return null;
+            }
+        }
+
+        public void clear() {
+            front = rear = null;
+            size = 0;
+        }
+    }
+
+    private static void test_1() {
+        int[] data = {1, 2, 3, 4, 5};
+        LinkedQueue newQueue = new LinkedQueue(10);   // 构建10个最大存储空间，0为不限容量
+        for (int i = 0; i < data.length; i++) {
+            newQueue.enqueue(data[i]);
+            System.out.print(data[i] + "/");
+        }
+        System.out.println("");
+        System.out.println(newQueue.size);
+        System.out.println("队尾=" + newQueue.peek_rear());
+
+        int[] b = {6, 7, 8};
+        for (int i = 0; i < b.length; i++) {
+            newQueue.enqueue(b[i]);
+            System.out.print(b[i] + "/");
+        }
+        System.out.println("");
+        System.out.println("出队前队头=" + newQueue.peek_front());
+        System.out.println("队尾=" + newQueue.peek_rear());
+
+        newQueue.dequeue();
+        System.out.println(newQueue.size);
+        System.out.println("出队后队头=" + newQueue.peek_front());
+
+        newQueue.clear();
+        System.out.println(newQueue.size);
+
+    }
 }
