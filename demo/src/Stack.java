@@ -12,6 +12,7 @@ public class Stack {
 
     /**
      * java顺序栈的实现
+     *
      * @param <E>
      */
     public static class SeqStack<E> {
@@ -117,6 +118,7 @@ public class Stack {
 
     /**
      * java链栈的实现
+     *
      * @param <E>
      */
     public static class ChainStack<E> {
@@ -128,7 +130,13 @@ public class Stack {
             private E data;                //数据域
             private StackNode<E> next;     //引用域
 
+            public StackNode(E data) {
+                this.data = data;
+
+            }
+
             public StackNode(E data, StackNode<E> next) {
+                super();
                 this.data = data;
                 this.next = next;
             }
@@ -161,40 +169,44 @@ public class Stack {
             size = 0;
         }
 
-        public boolean empty() {
-            if ((top == null)&& (size == 0) ) {
+        public boolean isEmpty() {
+            if ((top == null) && (size == 0)) {
                 return true;
             } else {
                 return false;
             }
         }
 
-        //入栈
+        // 入栈
         public E push(E value) {
-            StackNode<E> newnode = new StackNode(value, top);
-            if (!empty()) {
-                newnode.setNext(top);              // 新加入的结点的next指向原来的top
-                top = newnode;                     // 新加入的结点变为top
+            if (!isEmpty()) {
+                StackNode<E> newNode = new StackNode(value, top);
+                newNode.setNext(top);              // 新加入的结点的next指向原来的top
+                top = newNode;                     // 新加入的结点变为top
+            } else {
+                StackNode stackNode = new StackNode(value, null);
+                top = stackNode;
             }
-            size++;                               // 结点个数自增
+            ++size;                               // 结点个数自增
             return value;
         }
 
         //出栈
         public E pop() {
             E data = null;
-            if (!empty()) {
+            if (!isEmpty()) {
+                data = top.getData();          // 出栈前，得到数据
                 top = top.getNext();           // 出栈后，top变为原来元素的next引用域
-                data = top.getData();          // 出栈后，得到数据
                 size--;
             }
             return data;
         }
 
+
         //获取栈顶数据
         public E peek() {
             E data = null;
-            if (!empty()) {
+            if (!isEmpty()) {
                 data = top.data;          //得到栈顶数据
             }
             return data;
@@ -202,8 +214,12 @@ public class Stack {
 
         //清空栈
         public void clear() {
-           top = null;
+            top = null;
             size = 0;
+        }
+
+        public int size() {
+            return size;
         }
     }
 
