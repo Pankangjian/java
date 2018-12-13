@@ -70,7 +70,7 @@ public class Sort {
             int min = i;
             for (int j = i + 1; j < length; j++) {
                 if (arr[j] < arr[min]) {
-                    min = j;                        // 找出最小值位置进行交换
+                    min = j;                        // 找出最小值位置
                 }
             }
             if (min != i) {                         // 元素交换
@@ -186,16 +186,79 @@ public class Sort {
         quickSort(arr, j + 1, right);  // 递归调用
     }
 
+    /**
+     * 归并排序--
+     * 归并排序是建立在归并操作上的一种有效的排序算法。
+     * 该算法是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；
+     * 即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为2-路归并。
+     */
+
+    // 二路归并
+    public void merge(int[] arr, int len) {
+        int m = 0;                                  // 临时顺序表的起始位置
+        int low_1 = 0;                              // 第1个有序表的起始位置
+        int high_1;                                 // 第1个有序表的结束位置
+        int low_2;                                  // 第2个有序表的起始位置
+        int high_2;                                 // 第2个有序表的起始位置
+        int i = 0;
+        int j = 0;
+        int[] temp = new int[arr.length];           // 临时表，用于临时将两个有序的表合并为一个有序表
+        // 归并处理
+        while (low_1 + len < arr.length) {
+            low_2 = low_1 + len;                    // 第2个有序表的起始位置
+            high_1 = low_2 - 1;                     // 第1个有序表的结束位置
+            // 第2个有序表的结束位置
+            high_2 = (low_2 + len - 1 < arr.length) ? low_2 + len - 1 : arr.length - 1;
+            j = low_2;
+            i = low_1;
+            // 两个有序表中的记录没有排序
+            while ((i <= high_1) && (j <= high_2)) {
+                if (arr[i] <= arr[j]) {             // 第1个有序表记录的关键码小于第2个有序记录表的关键码
+                    temp[m++] = arr[i++];
+                } else {                            // 第2个有序表记录的关键码小于第1个有序记录表的关键码
+                    temp[m++] = arr[j++];
+                }
+            }
+            while (i <= high_1) {                   // 第1个有序表中还有记录没有排序
+                temp[m++] = arr[i++];
+            }
+            while (j <= high_2) {                   // 第2个有序表中还有记录没有排序
+                temp[m++] = arr[j++];
+            }
+            low_1 = high_2 + 1;
+        }
+        i = low_1;
+        while (i < arr.length) {                    // 原顺序表中还有记录没有排序
+            temp[m++] = arr[i++];
+        }
+        for (i = 0; i < arr.length; i++) {          // 临时顺序表中的记录复制到原顺序表，使原顺序表中的记录有序
+            arr[i] = temp[i];
+        }
+    }
+    public void mergeSort(int[] arr) {
+        int k = 1;    // 增量
+        while (k < arr.length) {
+            merge(arr, k);
+            k *= 2;
+        }
+    }
+
+
+
     private static void test_sort() {
-        int arr[] = {1, 0, 3, 9, 8, 6, 7, 2, 5, 4, -1};
+        int arr[] = {1, 0, 3, 9, 8, 6, 7, 2, 5, 4, -1,};
         Sort s = new Sort();
 //        s.insertSort(arr, arr.length);
 //        s.shellSort(arr, arr.length);
 //        s.selectSort(arr, arr.length);
 //        s.heapsort(arr, arr.length);
 //        s.bubbleSort(arr, arr.length);
-        s.quickSort(arr, 0, arr.length - 1);
-        System.out.print("\n快速排序:");
+//        s.quickSort(arr, 0, arr.length - 1);
+//        System.out.print("\n快速排序:");
+//        for (int i = 0; i < arr.length; i++) {
+//            System.out.print(arr[i]);
+        s.mergeSort(arr);
+        System.out.print("\n归并排序:");
         for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i]);
         }
